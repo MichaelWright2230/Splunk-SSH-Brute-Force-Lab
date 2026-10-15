@@ -1,4 +1,3 @@
-<img width="1723" height="978" alt="03-splunk-installed png" src="https://github.com/user-attachments/assets/fe8683ad-c88d-470c-8f30-159969be3fc0" />
 # Step-by-Step Splunk SSH Detection Lab
 
 This guide documents the lab setup, log collection, detection search and investigation workflow using the configuration and results recorded from my lab.
