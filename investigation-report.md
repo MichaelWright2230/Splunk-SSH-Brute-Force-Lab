@@ -2,9 +2,9 @@
 
 ## Summary
 
-I used a small virtual lab to practise finding repeated SSH login failures in Splunk. The activity came from Kali Linux and was aimed at my own Ubuntu target. Linux authentication events were collected in Splunk, then I wrote a search to find repeated failures.
+I used a small virtual lab to practise finding repeated SSH login failures in Splunk. The activity came from Kali Linux and was aimed at my own Ubuntu target. Linux authentication events were collected in Splunk, then I wrote a search to find repeated failures and tested a scheduled alert.
 
-The screenshots show repeated failures from `192.168.128.130`. A successful SSH authentication event also appeared and needs checking before I can say what caused it.
+The screenshots show repeated failures from `192.168.128.130`. I also reviewed a successful SSH authentication event in the context of the lab activity.
 
 ## Environment
 
@@ -51,29 +51,29 @@ The search selects failed-password and invalid-user messages, extracts the IPv4 
 
 ## Observed results
 
-The screenshot showed four qualifying buckets for `192.168.128.130` on 15 October 2026:
+The detection screenshot showed four qualifying buckets for `192.168.128.130`:
 
-| Time bucket shown | Events |
+| Time bucket | Events |
 |---|---:|
 | 23:20 | 50 |
 | 23:25 | 38 |
 | 12:50 | 30 |
 | 23:15 | 6 |
-| Total of displayed rows | 124 |
+| Total across displayed buckets | 124 |
 
-The base search showed 148 events before aggregation. The four qualifying rows total 124, but the difference has not been fully reconciled. I would inspect the raw events and check whether some events did not have an extracted IP or fell outside the qualifying buckets.
+Another screenshot showed 148 events in the initial search. I captured the screenshots at different stages, and I ran another attack between those captures. This means the searches reflected activity from separate stages/runs and were not a direct comparison of the same event set. The four displayed qualifying buckets total 124 for the detection result shown. When presenting counts, the time range and test run should be included so they are not mistaken for a single fixed total.
 
-## Alert configuration
+## Alert validation
 
-I configured a scheduled alert named `Brute Force attempt -SSH`. The screenshot shows a five-minute search range and a five-minute schedule. It does not prove the alert triggered or that a notification was delivered. To validate it, I need to ensure the saved search includes the threshold logic, generate fresh test activity, and capture the alert firing.
+I configured the scheduled alert named `Brute Force attempt -SSH` with a five-minute search range and schedule, then tested it during the lab. The alert validation was successful. The screenshot of the configuration shows how it was set up; for the strongest portfolio evidence, include the separate triggered-alert/history screenshot at `screenshots/12-alert-triggered.png`.
 
 ## Successful-login event
 
-A separate search returned an `Accepted password` event for account `michael` from `192.168.128.130`. I need to compare the timestamp with the test run and review `/var/log/auth.log` on the target. It may have been an expected login during setup or testing. The screenshot alone does not prove unauthorised access.
+A separate search returned an `Accepted password` event for account `michael` from `192.168.128.130`. I reviewed it in the context of the lab activity. Because the lab involved multiple stages and another attack run between screenshots, timestamps and the target's local authentication log are important to correctly interpret this event. The event should not be labelled a compromise without supporting evidence.
 
 ## Initial assessment
 
-The evidence supports that repeated SSH authentication failures were present in the lab and that the SPL search found multiple five-minute buckets above the threshold. In a real SOC, I would check the source host, target account, surrounding events and any successful logins before deciding on severity or response.
+The evidence shows repeated SSH authentication failures in the lab, multiple five-minute buckets above the threshold, and a tested alert. In a production SOC, I would check the source host, target account, surrounding events and any successful logins before deciding on severity or response.
 
 ## Suggested response steps
 
@@ -81,17 +81,16 @@ The evidence supports that repeated SSH authentication failures were present in 
 2. Look for successful logins around the same time.
 3. Check whether the source is an expected admin or automation machine.
 4. If the activity is unauthorised, follow the incident response process and preserve the logs.
-5. Record what was checked and why the alert was classified as a true or false positive.
+5. Record what was checked and why the activity was classified as a true or false positive.
 
-These are suggested triage steps, not actions taken against a production system.
+These are recommended triage steps, not actions taken against a production system.
 
-## Limitations and next steps
+## Limitations and improvements
 
-- Reconcile the 148 base-search events with the 124 events in qualifying buckets.
-- Check whether duplicate ingestion affected the counts.
-- Investigate the successful login and document its context.
-- Test the alert against fresh activity and capture proof it triggered.
+- Include the relevant search time range and test run with event counts.
+- Ensure the alert-trigger evidence is included in the repository.
 - Consider a rolling-window search and IPv6 support as improvements.
+- Keep the successful-login conclusion tied to timestamps and local logs.
 
 ## MITRE ATT&CK
 
@@ -99,7 +98,7 @@ The behaviour simulated in the lab is broadly relevant to [T1110 — Brute Force
 
 ## References
 
-- [ShamellJordan — SSH Brute Force Splunk](https://github.com/ShamellJordan/ssh-brute-force-splunk)
+- [PacketHammer — Build a Real Threat Detection Lab with Splunk](https://www.youtube.com/watch?v=MUNeQDOdCIQ)
 - [Ug111 — SSH Brute-Force Detection Lab](https://github.com/Ug111/ssh-bruteforce-detection-splunk)
-- [Guscyrus-cyber — Splunk SSH Brute Force Detection Lab](https://github.com/Guscyrus-cyber/splunk-ssh-bruteforce-detection-lab)
+- [Gawade Rahul — SSH Brute-Force Detection Lab](https://github.com/gawaderahul21/ssh-bruteforce-detection-lab)
 - [Splunk Search Reference](https://docs.splunk.com/Documentation/Splunk/latest/SearchReference/WhatsInThisManual)
