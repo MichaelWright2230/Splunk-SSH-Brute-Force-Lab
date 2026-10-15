@@ -24,7 +24,9 @@ I used VMware Workstation to run three virtual machines. Keeping the test source
 
 The captured setup shows Splunk Web on TCP 8000 and forwarding on TCP 9997.
 
-**Screenshot placeholders:** `screenshots/01-vm-setup.png` should show the VM list. `screenshots/02-network-configuration.png` should show the VM network/IP details.
+<img width="1909" height="987" alt="01-vm-setup png" src="https://github.com/user-attachments/assets/a07aec1d-bb83-4300-a98f-1dd18c6a22c5" />
+
+<img width="1722" height="978" alt="02-network-configuration png" src="https://github.com/user-attachments/assets/f301f162-1dbb-441c-a3ba-09a18c59ad82" />
 
 ## 2. Splunk installation and access
 
