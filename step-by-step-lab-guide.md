@@ -1,3 +1,4 @@
+<img width="1723" height="978" alt="03-splunk-installed png" src="https://github.com/user-attachments/assets/fe8683ad-c88d-470c-8f30-159969be3fc0" />
 # Step-by-Step Splunk SSH Detection Lab
 
 This guide documents the lab setup, log collection, detection search and investigation workflow using the configuration and results recorded from my lab.
@@ -32,7 +33,7 @@ The captured setup shows Splunk Web on TCP 8000 and forwarding on TCP 9997.
 
 The Splunk VM acts as the central place to search authentication activity. The captured configuration identifies Splunk Enterprise 10.6.0.5 on Ubuntu-Splunk. I accessed Splunk Web on port 8000.
 
-**Screenshot placeholder:** `screenshots/03-splunk-web.png` — Splunk Web open and readable. Hide credentials or tokens.
+<img width="1723" height="978" alt="03-splunk-installed png" src="https://github.com/user-attachments/assets/57b55b2a-c499-4f52-880a-898b128894e3" />
 
 ## 3. Forward Linux authentication logs
 
@@ -44,7 +45,9 @@ Validation search:
 index=linux sourcetype="linux_secure"
 ```
 
-**Screenshot placeholders:** `screenshots/04-forwarder-config.png` — forwarding configuration. `screenshots/05-linux-events.png` — authentication events in Splunk.
+<img width="713" height="346" alt="05-forwarder-config" src="https://github.com/user-attachments/assets/a4f0feb7-8068-43c4-8eaa-96af0a4c7bcc" />
+
+<img width="1723" height="971" alt="06-first-events" src="https://github.com/user-attachments/assets/d3aee5a6-4766-4a15-a4a1-d59d8582322d" />
 
 ## 4. Generate controlled SSH failures
 
@@ -60,7 +63,7 @@ index=linux sourcetype="linux_secure" ("Failed password" OR "Invalid user")
 
 These events indicate unsuccessful authentication, not automatic proof of malicious activity.
 
-**Screenshot placeholder:** `screenshots/07-failed-ssh-events.png` — failed SSH events with timestamps and source details visible.
+<img width="1717" height="966" alt="07-failed-ssh-events png" src="https://github.com/user-attachments/assets/3fe0d51d-b78a-4034-902e-393f5a5da818" />
 
 ## 6. Detection search
 
@@ -86,7 +89,7 @@ index=linux sourcetype="linux_secure"
 
 This uses fixed five-minute buckets, not a rolling five-minute window. The extraction expression also supports IPv4 only.
 
-**Screenshot placeholder:** `screenshots/11-five-minute-detection.png` — full query and results table.
+<img width="1231" height="75" alt="11-event-details" src="https://github.com/user-attachments/assets/f74b9487-f4ad-49af-bc0a-85431ecc8efb" />
 
 ## 7. Interpret the counts in context
 
@@ -102,19 +105,23 @@ The detection screenshot showed four qualifying buckets for `192.168.128.130`:
 
 Another screenshot showed 148 events in the initial search. There was a gap between capturing the screenshots, and I ran another attack during that gap. The screenshots therefore show different stages/runs of the test activity, rather than two counts from the same unchanged event set. The four qualifying rows total 124 for the detection result shown.
 
-**Screenshot placeholder:** `screenshots/08-failure-counts.png` — count search and time range, if separate from the final detection screenshot.
+<img width="1713" height="967" alt="08-failure-counts png" src="https://github.com/user-attachments/assets/818e7518-487b-4e7a-bedc-86583a3f477a" />
 
 ## 8. Configure and validate the alert
 
 I configured the scheduled alert named `Brute Force attempt -SSH` with a five-minute search range and schedule, then tested it during the lab. The alert validation was successful.
 
-**Screenshot placeholders:** `screenshots/10-alert-settings.png` — alert configuration. `screenshots/12-alert-triggered.png` — triggered alert/history evidence.
+<img width="652" height="729" alt="saved alert part 1" src="https://github.com/user-attachments/assets/d4161268-355a-4fbc-b1cc-32c549e3a4a2" />
+
+<img width="636" height="721" alt="saved alert 2" src="https://github.com/user-attachments/assets/9aea439a-a0f4-4fd5-97e3-8d7792eae2a0" />
 
 ## 9. Review the successful login
 
 A separate search showed an `Accepted password` event for account `michael` from `192.168.128.130`. I considered it in the context of the lab's multiple stages. Compare the timestamp with the attack run and use the target's local authentication log to explain the event accurately; the event alone does not prove compromise.
 
-**Screenshot placeholders:** `screenshots/09-successful-login-review.png` — event details. `screenshots/13-login-investigation.png` — final explanation supported by the timestamps/logs.
+<img width="1723" height="957" alt="09-successful-login-review png" src="https://github.com/user-attachments/assets/0ea66077-7987-4e9e-9169-b250ddbcdad8" />
+
+<img width="1716" height="961" alt="13-five-minute-detection" src="https://github.com/user-attachments/assets/9a3b2772-aaba-4ee1-a64e-7da833147bb0" />
 
 ## 10. SOC assessment and MITRE ATT&CK
 
