@@ -2,6 +2,14 @@
 
 I built this lab to practise collecting Linux authentication logs in Splunk and investigating repeated SSH login failures. I used VMware virtual machines, Ubuntu for the target and Splunk server, and Kali Linux to generate test activity against my own lab machine.
 
+## Project documentation
+
+- **[Step-by-step lab guide](step-by-step-lab-guide.md)** — setup, log forwarding, detection query, results, alert configuration, investigation and screenshot placeholders.
+- [Investigation report](investigation-report.md)
+- [Lab architecture](architecture.md)
+- [Screenshot guide](SCREENSHOT-GUIDE.md)
+- [Detection query](detections/ssh-brute-force-5min.spl)
+
 ## Lab setup
 
 | Component | Details shown in my screenshots |
@@ -61,25 +69,15 @@ I also found an `Accepted password` event for `michael` from the same source IP.
 
 I configured a scheduled alert named `Brute Force attempt -SSH`, with a five-minute search range and schedule. The screenshot confirms the configuration screen, but I have not captured proof that the alert actually triggered. I won't call it validated until I test it and capture the result.
 
-## Project files
-
-- [Full investigation report](investigation-report.md)
-- [Lab architecture](architecture.md)
-- [Screenshot guide](SCREENSHOT-GUIDE.md)
-- [Detection query](detections/ssh-brute-force-5min.spl)
-- Screenshots belong in the `screenshots/` folder; see the screenshot guide for filenames.
-
 ## MITRE ATT&CK
 
 The simulated repeated authentication failures are broadly relevant to [T1110 — Brute Force](https://attack.mitre.org/techniques/T1110/). This maps the behaviour tested in the lab; it does not claim a real attacker compromised a system.
 
 ## References
 
-These public projects were examples of how other learners present similar labs. The results above are based on my own screenshots.
-
-- [ShamellJordan — SSH Brute Force Splunk](https://github.com/ShamellJordan/ssh-brute-force-splunk)
-- [Ug111 — SSH Brute-Force Detection Lab](https://github.com/Ug111/ssh-bruteforce-detection-splunk)
-- [Guscyrus-cyber — Splunk SSH Brute Force Detection Lab](https://github.com/Guscyrus-cyber/splunk-ssh-bruteforce-detection-lab)
+- [PacketHammer — Part 1: Ubuntu VM installs, Build a Real Threat Detection Lab with Splunk](https://www.youtube.com/watch?v=MUNeQDOdCIQ)
+- [Ug111 — SSH Brute-Force Detection Lab](https://github.com/Ug111/ssh-brute-force-detection-splunk)
+- [Gawade Rahul — SSH Brute-Force Detection Lab](https://github.com/gawaderahul21/ssh-bruteforce-detection-lab)
 - [Splunk Search Reference](https://docs.splunk.com/Documentation/Splunk/latest/SearchReference/WhatsInThisManual)
 
 ## Still to verify
