@@ -4,7 +4,7 @@ I built this lab to practise collecting Linux authentication logs in Splunk and 
 
 ## Project documentation
 
-- **[Step-by-step lab guide](step-by-step-lab-guide.md)** — setup, log forwarding, detection query, results, alert configuration, investigation and screenshot placeholders.
+- **[Step-by-step lab guide](step-by-step-lab-guide.md)** — setup, log forwarding, detection query, results, alert configuration and investigation.
 - [Investigation report](investigation-report.md)
 - [Lab architecture](architecture.md)
 - [Screenshot guide](SCREENSHOT-GUIDE.md)
@@ -21,19 +21,38 @@ I built this lab to practise collecting Linux authentication logs in Splunk and 
 | Test source | Kali Linux — `192.168.128.130` |
 | Index / sourcetype | `linux` / `linux_secure` |
 | Log source | `/var/log/auth.log` |
-| Ports | 8000 (Splunk Web), 9997 (forwarding) |
+| Ports | 8000 (Splunk Web), 9997 (forwarding), 22 (SSH) |
 
-These are the values visible in my screenshots and may change if I rebuild the lab.
+These are the values visible in my lab evidence and may change if I rebuild the lab.
+
+## Lab architecture
+
+The test traffic starts in Kali Linux and targets SSH on Ubuntu-Target. The target records authentication outcomes in `/var/log/auth.log`. Its configured forwarder sends those events to the Splunk receiver on Ubuntu-Splunk, where I search the events and run the detection.
+
+```mermaid
+flowchart LR
+    K["Kali Linux<br/>192.168.128.130"] -->|"SSH test attempts<br/>TCP 22"| T["Ubuntu-Target<br/>192.168.128.128"]
+    T --> L["/var/log/auth.log"]
+    L --> F["Splunk Universal Forwarder"]
+    F -->|"Forwarded logs<br/>TCP 9997"| S["Ubuntu-Splunk<br/>192.168.128.129"]
+    S --> Q["Splunk search<br/>linux / linux_secure"]
+    Q --> D["5+ failures in a fixed<br/>5-minute bucket"]
+    D --> A["Scheduled alert"]
+    S -.->|"Splunk Web<br/>TCP 8000"| R["Analyst review"]
+    D --> R
+```
+
+See [architecture.md](architecture.md) for a fuller explanation of each component, the event flow and the limits of what the screenshots prove.
 
 ## What I did
 
 1. Set up Ubuntu virtual machines and checked network connectivity.
 2. Installed Splunk Enterprise and opened Splunk Web.
-3. Forwarded Linux authentication events into Splunk.
-4. Used Kali to run repeated SSH login attempts against my Ubuntu target.
+3. Configured Linux authentication log forwarding and checked that events arrived in Splunk.
+4. Used Kali in the isolated lab to generate repeated SSH login attempts against Ubuntu-Target.
 5. Searched for failed authentication events and extracted the source IP.
 6. Grouped failures into fixed five-minute buckets and filtered for buckets with at least five matching events.
-7. Configured and tested a scheduled alert for the detection.
+7. Configured a scheduled alert and reviewed the results.
 
 ## Detection search
 
@@ -51,7 +70,7 @@ This search extracts the IPv4 source address, groups events into fixed five-minu
 
 ## Results captured
 
-The screenshot showed four qualifying buckets for `192.168.128.130` on 15 October 2026:
+The detection screenshot showed four qualifying buckets for `192.168.128.130` on 15 October 2026:
 
 | Time bucket | Matching events |
 |---|---:|
@@ -65,11 +84,11 @@ The initial search showed 148 events. The screenshots were captured at different
 
 ## Alert validation
 
-I configured the scheduled alert named `Brute Force attempt -SSH` with a five-minute search range and schedule, and tested the alert during the lab. The alert validation was successful. Add the screenshot showing the triggered alert or alert history as `screenshots/12-alert-triggered.png` so a reviewer can see the validation evidence directly.
+I configured the scheduled alert named `Brute Force attempt -SSH` with a five-minute search range and schedule, and tested it during the lab. The alert configuration screenshots show the settings used. A screenshot of the alert firing or its history should be included as separate evidence if available; configuration alone does not show a trigger.
 
 ## Successful-login review
 
-A separate search showed an `Accepted password` event for `michael` from the same source IP. Since the lab was run in multiple stages, this event needs to be interpreted alongside the timestamp and test activity rather than treated as proof of a compromise. See the investigation report for the context and triage approach.
+A separate search showed an `Accepted password` event for `michael` from `192.168.128.130`. Since the lab was run in multiple stages, this event needs to be interpreted alongside the timestamp and test activity rather than treated as proof of a compromise. See the investigation report for the context and triage approach.
 
 ## MITRE ATT&CK
 
