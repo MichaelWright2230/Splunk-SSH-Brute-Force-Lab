@@ -81,7 +81,3 @@ The simulated repeated authentication failures are broadly relevant to [T1110 �
 - [Ug111 — SSH Brute-Force Detection Lab](https://github.com/Ug111/ssh-brute-force-detection-splunk)
 - [Gawade Rahul — SSH Brute-Force Detection Lab](https://github.com/gawaderahul21/ssh-bruteforce-detection-lab)
 - [Splunk Search Reference](https://docs.splunk.com/Documentation/Splunk/latest/SearchReference/WhatsInThisManual)
-
-## Evidence to add
-
-Upload the actual screenshots to `screenshots/` using the filenames in [SCREENSHOT-GUIDE.md](SCREENSHOT-GUIDE.md). Include the triggered-alert screenshot and the login review so the report is backed by visible evidence.
