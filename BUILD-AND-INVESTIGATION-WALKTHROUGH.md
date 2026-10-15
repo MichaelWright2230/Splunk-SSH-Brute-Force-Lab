@@ -41,7 +41,7 @@ Use an isolated virtual network and only run test activity against systems you o
 
 These values are recorded from the screenshots supplied for this project. IP addresses can change after a VM network is rebuilt, so confirm them on the running machines before using them.
 
-**Screenshot placeholder —** Add `screenshots/01-vm-setup.png` showing the virtual machines in VMware, and `screenshots/02-network-configuration.png` showing the addresses or network configuration.
+<img width="1909" height="987" alt="01-vm-setup png" src="https://github.com/user-attachments/assets/1967a45f-2bb0-4869-8d34-ab3622a7d06c" />
 
 ## 3. Prepare the Ubuntu machines
 
@@ -58,7 +58,7 @@ Checks to record during a rebuild:
 
 Don't publish passwords, private keys or other credentials in screenshots or configuration files.
 
-**Screenshot placeholder —** Add `screenshots/03-splunk-web.png` once Splunk Web is accessible. If you have a screenshot of SSH service status or a harmless connectivity check, include it as `screenshots/03b-target-connectivity.png`.
+<img width="1722" height="978" alt="02-network-configuration png" src="https://github.com/user-attachments/assets/462fe7b4-e324-42d0-8aac-6fb69f20332a" />
 
 ## 4. Install and open Splunk Enterprise
 
@@ -66,7 +66,7 @@ Splunk Enterprise was installed on Ubuntu-Splunk. The interface shown in the scr
 
 After installation, the useful validation was to open Splunk Web and check that the instance was running before configuring ingestion. A running interface alone does not prove that source logs are arriving; ingestion must be checked separately.
 
-**Screenshot placeholder —** Add `screenshots/03-splunk-web.png` showing the running Splunk interface and version if visible. Do not include a password in the image.
+<img width="1723" height="978" alt="03-splunk-installed png" src="https://github.com/user-attachments/assets/8c61cb3e-ad86-4b3a-92c8-100544c38329" />
 
 ## 5. Configure log forwarding
 
@@ -80,7 +80,7 @@ The source log used for this exercise was:
 
 The key validation is that new authentication events appear in Splunk after a login attempt is made on the target. If events do not arrive, check the forwarding destination, receiver status, network reachability and the index/sourcetype selected for the data.
 
-**Screenshot placeholder —** Add `screenshots/04-forwarder-config.png` showing the forwarding configuration, and `screenshots/05-linux-events.png` showing events arriving in Splunk. These screenshots should show settings/results, not secrets.
+<img width="713" height="346" alt="05-forwarder-config" src="https://github.com/user-attachments/assets/a7245977-b250-4ce6-ba69-410c0e20680a" />
 
 ## 6. Generate test authentication activity
 
@@ -108,7 +108,7 @@ index=linux sourcetype="linux_secure" ("Failed password" OR "Invalid user")
 
 The first search checks whether data exists in the expected index and sourcetype. The second narrows the events to common failed-authentication messages. Review a few raw events to make sure the search is matching the intended test, not unrelated authentication activity.
 
-**Screenshot placeholder —** Add `screenshots/08-failure-counts.png` showing the initial search and event count. If possible, capture one expanded raw event with the timestamp, source and attempted username visible.
+<img width="1713" height="967" alt="08-failure-counts png" src="https://github.com/user-attachments/assets/ea2ce573-0bd4-4a89-b4a9-4c3145121350" />
 
 ## 8. Build the detection search
 
@@ -136,7 +136,7 @@ What each part does:
 
 This query has limitations: it uses fixed five-minute buckets rather than a rolling window, and its regular expression handles IPv4 addresses only. Events that do not match the source-IP expression may not appear in the grouped output. For a stronger production detection, I would test field extraction against the raw events, consider grouping by both source and target account, and tune the threshold against normal login noise.
 
-**Screenshot placeholder —** Add `screenshots/11-five-minute-detection.png` showing the complete SPL query and the resulting table.
+<img width="1231" height="75" alt="11-event-details" src="https://github.com/user-attachments/assets/886bdd48-200d-4704-bf95-34e0875c8fd8" />
 
 ## 9. Interpret the observed results
 
@@ -152,15 +152,13 @@ The supplied screenshot showed four qualifying buckets for `192.168.128.130` on 
 
 The search view also showed 148 events before aggregation. The four listed rows sum to 124, which means there is a difference of 24 events that I have not fully explained. I have not treated 124 as the total number of all failed events. A proper follow-up is to inspect raw events, confirm the search time range and timezone, and check whether some events had no extracted IPv4 address or did not meet the bucket threshold.
 
-**Screenshot placeholder —** Add `screenshots/11-five-minute-detection.png` with the table and query. If you later reconcile the count difference, add `screenshots/11b-count-reconciliation.png` and update this report with the verified explanation.
-
 ## 10. Review the successful authentication event
 
 A separate search showed an `Accepted password` event for account `michael` from `192.168.128.130`. A successful login appearing near failed attempts is worth reviewing, but it does not automatically prove a compromise.
 
 To investigate, compare the timestamp against the test run, inspect the corresponding entry in `/var/log/auth.log` on Ubuntu-Target, and check whether the account and source match the expected lab activity. Record what the evidence supports and avoid drawing a conclusion from the event text alone.
 
-**Screenshot placeholder —** Add `screenshots/09-successful-login-review.png` showing the event details. After checking the timestamp and target log, add `screenshots/13-login-investigation.png` with the evidence supporting your conclusion.
+<img width="1723" height="957" alt="09-successful-login-review png" src="https://github.com/user-attachments/assets/8869611b-7fbc-4f38-883c-d1ffa7f3e9ab" />
 
 ## 11. Configure and validate the alert
 
@@ -174,7 +172,9 @@ Before treating the alert as complete:
 5. If email actions are configured, verify delivery separately.
 6. Record any tuning needed to avoid repeated or noisy alerts.
 
-**Screenshot placeholder —** Add `screenshots/10-alert-settings.png` showing the saved alert configuration. Only add `screenshots/12-alert-triggered.png` after a fresh test actually triggers the alert.
+<img width="652" height="729" alt="saved alert part 1" src="https://github.com/user-attachments/assets/87e72c64-e291-4ff8-acc0-7c0a7e51ea1e" />
+
+<img width="636" height="721" alt="saved alert 2" src="https://github.com/user-attachments/assets/08f53ce4-0bdd-4945-b8c3-6d75ec47aa84" />
 
 ## 12. MITRE ATT&CK mapping
 
