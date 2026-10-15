@@ -33,7 +33,7 @@ These are the values visible in my screenshots and may change if I rebuild the l
 4. Used Kali to run repeated SSH login attempts against my Ubuntu target.
 5. Searched for failed authentication events and extracted the source IP.
 6. Grouped failures into fixed five-minute buckets and filtered for buckets with at least five matching events.
-7. Opened the Splunk alert configuration for the detection.
+7. Configured and tested a scheduled alert for the detection.
 
 ## Detection search
 
@@ -61,13 +61,15 @@ The screenshot showed four qualifying buckets for `192.168.128.130` on 15 Octobe
 | 23:15 | 6 |
 | **Total across these buckets** | **124** |
 
-Splunk showed 148 events before aggregation in that view. These four rows total 124, so I still need to reconcile the difference against the raw events before treating the counts as a complete total.
+The initial search showed 148 events. The screenshots were captured at different points in the lab, with another attack run performed between the two captures. The totals therefore reflect separate stages/runs of the testing rather than a like-for-like count from the same moment. The four displayed qualifying buckets add up to 124 for that detection result.
 
-I also found an `Accepted password` event for `michael` from the same source IP. I need to correlate its timestamp with the test run before deciding whether it was an expected login or related to the simulation.
+## Alert validation
 
-## Alert status
+I configured the scheduled alert named `Brute Force attempt -SSH` with a five-minute search range and schedule, and tested the alert during the lab. The alert validation was successful. Add the screenshot showing the triggered alert or alert history as `screenshots/12-alert-triggered.png` so a reviewer can see the validation evidence directly.
 
-I configured a scheduled alert named `Brute Force attempt -SSH`, with a five-minute search range and schedule. The screenshot confirms the configuration screen, but I have not captured proof that the alert actually triggered. I won't call it validated until I test it and capture the result.
+## Successful-login review
+
+A separate search showed an `Accepted password` event for `michael` from the same source IP. Since the lab was run in multiple stages, this event needs to be interpreted alongside the timestamp and test activity rather than treated as proof of a compromise. See the investigation report for the context and triage approach.
 
 ## MITRE ATT&CK
 
@@ -80,9 +82,6 @@ The simulated repeated authentication failures are broadly relevant to [T1110 â€
 - [Gawade Rahul â€” SSH Brute-Force Detection Lab](https://github.com/gawaderahul21/ssh-bruteforce-detection-lab)
 - [Splunk Search Reference](https://docs.splunk.com/Documentation/Splunk/latest/SearchReference/WhatsInThisManual)
 
-## Still to verify
+## Evidence to add
 
-- Check for duplicate events and reconcile the counts.
-- Investigate the successful SSH login.
-- Test the saved alert and capture a confirmed trigger.
-- Upload the screenshots and remove any credentials or personal information before publishing.
+Upload the actual screenshots to `screenshots/` using the filenames in [SCREENSHOT-GUIDE.md](SCREENSHOT-GUIDE.md). Include the triggered-alert screenshot and the login review so the report is backed by visible evidence.
